@@ -5,6 +5,7 @@ import psycopg2
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
 
 def extract_essential_data(data: list[dict]) -> list[dict]:
@@ -26,32 +27,25 @@ def write_raw_data_to_json_file(data: list[dict], filepath: Path):
 
 
 if __name__ == '__main__':
-    # DATA_DIR = Path.cwd() / 'data'
-    # RAW_DIR = DATA_DIR / 'raw'
-    # URL = 'https://restcountries.com/v3.1/all?fields=name,flags,population'
+    DATA_DIR = Path.cwd() / 'data'
+    RAW_DIR = DATA_DIR / 'raw'
+    URL = 'https://restcountries.com/v3.1/all?fields=name,flags,population'
 
-    # response = requests.get(URL)
-    # data = response.json()
+    response = requests.get(URL)
+    data = response.json()
 
-    # write_raw_data_to_json_file(data, RAW_DIR / 'countries_raw.json')
+    write_raw_data_to_json_file(data, RAW_DIR / 'countries_raw.json')
 
-    # res = extract_essential_data(data)
-    # print(convert_to_dataframe(res).head())
+    res = extract_essential_data(data)
+    countries_df = convert_to_dataframe(res)
 
     load_dotenv()
 
-    conn = psycopg2.connect(
-        host= os.getenv('DB_HOST'),
-        port=os.getenv('DB_PORT'),
-        dbname=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-    )
+    DB_USER = os.getenv('DB_USER')
+    DB_HOST = os.getenv('DB_HOST')
+    DB_PORT= os.getenv('DB_PORT')
+    DB_NAME = os.getenv('DB_NAME')
 
-    cur = conn.cursor()
-    cur.execute('SELECT version();')
-    db_version = cur.fetchone()
-
-    print('PostgreSQL version', db_version)
-
-    cur.close()
-    conn.close()
+    conn_string = f'postgresql://{DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+    engine = create_engine(conn_string)
+    countries_df.to_sql("countries", engine, if_exists="replace", index=False)
