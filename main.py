@@ -3,6 +3,8 @@ import pandas as pd
 import json
 import psycopg2
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 
 def extract_essential_data(data: list[dict]) -> list[dict]:
@@ -17,9 +19,11 @@ def extract_essential_data(data: list[dict]) -> list[dict]:
 def convert_to_dataframe(data: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(data)
 
+
 def write_raw_data_to_json_file(data: list[dict], filepath: Path):
     with open(filepath, 'w') as f:
         json.dump(data, f)
+
 
 if __name__ == '__main__':
     # DATA_DIR = Path.cwd() / 'data'
@@ -34,11 +38,13 @@ if __name__ == '__main__':
     # res = extract_essential_data(data)
     # print(convert_to_dataframe(res).head())
 
+    load_dotenv()
+
     conn = psycopg2.connect(
-        host= 'localhost',
-        port=5432,
-        dbname='aidigitaldb',
-        user='postgres',
+        host= os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT'),
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
     )
 
     cur = conn.cursor()
