@@ -4,7 +4,7 @@ This application fetches data about countries using the [REST Countries API](htt
 
 ## Features
 
-- Fetches country data including name, population, region, capital, flag
+- Fetches country data including name, population, region, flag, area
 - Saves data to a PostgreSQL database using SQLAlchemy
 - Provides a sortable, paginated table with country information
 - Displays flags of selected country

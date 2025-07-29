@@ -18,10 +18,9 @@ engine = create_engine(DATABASE_URL)
 df = pd.read_sql("SELECT * FROM countries", engine)
 
 app.layout = html.Div([
-    html.H2("Countries", style={'textAlign': 'center', 'marginBottom': '30px'}),
+    html.H2("Countries", style={'textAlign': 'center', 'marginBottom': '30px', 'fontFamily': 'Arial, sans-serif'}),
 
     html.Div([
-        # Leva strana: tabela
         html.Div([
             dash_table.DataTable(
                 id='data-table',
@@ -31,19 +30,29 @@ app.layout = html.Div([
                 row_selectable="single",
                 selected_rows=[],
                 page_size=10,
-                style_table={'overflowX': 'auto'},
+                style_table={
+                    'overflowX': 'auto',
+                    'minWidth': '100%',
+                },
                 style_header={
-                    'backgroundColor': 'rgb(230, 230, 230)',
-                    'fontWeight': 'bold'
+                    'backgroundColor': '#004080',
+                    'color': 'white',
+                    'fontWeight': 'bold',
+                    'fontSize': '16px',
+                    'fontFamily': 'Arial, sans-serif',
+                    'border': 'none',
                 },
                 style_cell={
                     'textAlign': 'left',
-                    'padding': '8px',
+                    'padding': '10px',
                     'minWidth': '120px',
-                    'maxWidth': '250px',
+                    'maxWidth': '300px',
                     'whiteSpace': 'normal',
                     'overflow': 'hidden',
                     'textOverflow': 'ellipsis',
+                    'fontFamily': 'Arial, sans-serif',
+                    'fontSize': '14px',
+                    'borderBottom': '1px solid #ddd',
                 },
                 style_cell_conditional=[
                     {
@@ -52,29 +61,68 @@ app.layout = html.Div([
                         'whiteSpace': 'normal',
                     }
                 ],
+                style_data_conditional=[
+                    {
+                        'if': {'state': 'selected'},
+                        'backgroundColor': '#BFD7FF',
+                        'border': '1px solid #004080',
+                        'color': '#004080',
+                        'fontWeight': 'bold'
+                    },
+                    {
+                        'if': {'row_index': 'even'},
+                        'backgroundColor': '#f9f9f9',
+                    },
+                    {
+                        'if': {'row_index': 'odd'},
+                        'backgroundColor': 'white',
+                    },
+                    {
+                        'if': {'state': 'active'},  # hover
+                        'backgroundColor': '#D6E8FF',
+                        'border': '1px solid #004080',
+                    }
+                ],
+                tooltip_delay=500,
+                tooltip_duration=None,
             )
         ], style={
-            'flex': '2',
+            'flex': '9',
             'padding': '20px',
-            'boxShadow': '0 0 10px rgba(0,0,0,0.1)',
-            'borderRadius': '10px',
-            'backgroundColor': '#f9f9f9'
+            'boxShadow': '0 4px 12px rgba(0,0,0,0.1)',
+            'borderRadius': '12px',
+            'backgroundColor': 'white',
+            'maxHeight': '80vh',
+            'overflowY': 'auto'
         }),
 
-        # Desna strana: zastava
+        # Desna strana: zastava - zauzima oko 10% širine i stoji na vrhu
         html.Div(id='flag-container', style={
             'flex': '1',
             'textAlign': 'center',
-            'padding': '20px',
+            'padding': '10px',
             'marginLeft': '20px',
-            'boxShadow': '0 0 10px rgba(0,0,0,0.1)',
-            'borderRadius': '10px',
-            'backgroundColor': '#f4f4f4'
+            'boxShadow': '0 4px 12px rgba(0,0,0,0.1)',
+            'borderRadius': '12px',
+            'backgroundColor': '#f4f6f8',
+            'maxHeight': '150px',   # malo manja visina
+            'display': 'flex',
+            'flexDirection': 'column',
+            'justifyContent': 'flex-start',
+            'alignItems': 'center',
+            'position': 'sticky',
+            'top': '20px'           
         }),
-    ], style={'display': 'flex', 'justifyContent': 'center', 'maxWidth': '1200px', 'margin': '0 auto'})
+    ], style={
+        'display': 'flex',
+        'justifyContent': 'center',
+        'maxWidth': '1200px',
+        'margin': '0 auto',
+        'alignItems': 'flex-start' 
+    })
 ])
 
-# Callback za prikaz zastave
+
 @app.callback(
     Output('flag-container', 'children'),
     Input('data-table', 'derived_virtual_data'),
@@ -98,6 +146,6 @@ def update_flag(rows, selected_rows):
     else:
         return html.Div(f"No flag URL available for {country_name}.")
 
-# Pokretanje aplikacije
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
