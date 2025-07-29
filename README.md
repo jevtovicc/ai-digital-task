@@ -15,8 +15,8 @@ This application fetches data about countries using the [REST Countries API](htt
 
 ### 1. Clone the Repository
 
-git clone https://github.com/jevtovicc/ai-digital-task
-cd ai-digital-task
+- git clone https://github.com/jevtovicc/ai-digital-task
+- cd ai-digital-task
 
 
 ### 2. Run Docker Containers
@@ -24,12 +24,10 @@ docker-compose up --build
 
 This will:
 
-Build the image for the app
-Start both the PostgreSQL database and the Dash app
-Automatically fetch country data and populate the database on first run
+- Build the image for the app
+- Start both the PostgreSQL database and the Dash app
+- Automatically fetch country data and populate the database on first run
 
 
 ### 3. Open the Web App
-Once everything is running, open your browser and go to:
-http://localhost:8050
-You should see the dashboard with country data and flags.
+Once everything is running, open your browser and go to: http://localhost:8050 <br> You should see the dashboard with country data and flags.
