@@ -22,11 +22,13 @@ This application fetches data about countries using the [REST Countries API](htt
 Create a .env file in the root directory of the project before running docker-compose.
 
 Here is an example of what the .env file should look like: <br>
-DB_HOST=[db] <br>
+DB_HOST=db <br>
 DB_PORT=[port] <br>
 DB_NAME=[dbname] <br>
 DB_PASSWORD=[dbpassword] <br>
-DB_USER=[dbuser]
+DB_USER=[dbuser] <br>
+<br>
+<b>Note</b>: DB_HOST must be set to db because that is the name of the service in docker-compose.yml
 
 ### 3. Run Docker Containers
 docker-compose up --build
