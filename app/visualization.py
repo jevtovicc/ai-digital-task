@@ -1,13 +1,11 @@
 import dash
-from dash import Dash, html, dcc, dash_table, Input, Output
+from dash import html, dash_table, Input, Output
 import pandas as pd
 from sqlalchemy import create_engine
 import os
 
-# Inicijalizacija aplikacije
 app = dash.Dash(__name__)
 
-# Povezivanje sa bazom
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 db_name = os.getenv("DB_NAME")
@@ -17,10 +15,8 @@ db_port = os.getenv("DB_PORT")
 DATABASE_URL = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 engine = create_engine(DATABASE_URL)
 
-# Učitavanje podataka iz baze
 df = pd.read_sql("SELECT * FROM countries", engine)
 
-# Dash layout
 app.layout = html.Div([
     html.H2("Countries"),
 
@@ -34,27 +30,22 @@ app.layout = html.Div([
                 sort_action="native",
                 row_selectable="single",
                 selected_rows=[],
+                page_size=10,
                 style_table={'overflowX': 'auto', 'minWidth': '0px'},
                 style_cell={
                     'textAlign': 'left',
-                    'minWidth': '100px',  # minimalna širina kolone
-                    'maxWidth': '200px',  # maksimalna širina kolone
-                    'whiteSpace': 'nowrap',  # u većini kolona nema prelama, samo skraćivanje
+                    'minWidth': '100px',  
+                    'maxWidth': '200px',  
+                    'whiteSpace': 'nowrap',
                     'overflow': 'hidden',
                     'textOverflow': 'ellipsis',
                 },
                 style_cell_conditional=[
                     {
                         'if': {'column_id': 'flag_desc'},
-                        'maxWidth': '250px',    # šira kolona za opis zastave
-                        'whiteSpace': 'normal', # dozvoli prelamanje u novi red
-                    },
-                    {
-                        'if': {'column_id': 'flag_png'},  # možeš smanjiti kolonu sa URL-om ili slično
-                        'maxWidth': '100px',
-                        'whiteSpace': 'normal',
-                    },
-                    # Dodaj još kolona ako treba da im ograničiš širinu
+                        'maxWidth': '250px',    
+                        'whiteSpace': 'normal', 
+                    }
                 ],
             )
         ], style={'flex': '2', 'marginRight': '20px', 'minWidth': '0px'}),
