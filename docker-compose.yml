@@ -3,11 +3,9 @@ services:
     image: postgres:15
     container_name: pg_container
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5433:5432"
     volumes:
@@ -41,7 +39,7 @@ services:
       DB_PORT: ${DB_PORT}
     volumes:
       - ./app:/app
-    command: [ "python", "visualization.py" ]
+    command: [ "sh", "-c", "python wait_for_data.py && python visualization.py" ]
     depends_on:
       - db
 
