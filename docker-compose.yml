@@ -3,9 +3,11 @@ services:
     image: postgres:15
     container_name: pg_container
     environment:
-      POSTGRES_USER: filipjevtovic
-      POSTGRES_PASSWORD: aidigitalpass123
-      POSTGRES_DB: aidigitaldb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
     ports:
       - "5433:5432"
     volumes:
@@ -15,11 +17,11 @@ services:
     build: .
     container_name: etl_app
     environment:
-      DB_USER: filipjevtovic
-      DB_PASSWORD: aidigitalpass123
-      DB_NAME: aidigitaldb
-      DB_HOST: db
-      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
     volumes:
       - ./app:/app
     command: [ "python", "main.py" ]
@@ -32,11 +34,11 @@ services:
     ports:
       - "8050:8050"
     environment:
-      DB_USER: filipjevtovic
-      DB_PASSWORD: aidigitalpass123
-      DB_NAME: aidigitaldb
-      DB_HOST: db
-      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
     volumes:
       - ./app:/app
     command: [ "python", "visualization.py" ]
