@@ -1,8 +1,8 @@
-# 🌍 Country Data Visualization App
+# Country Data Visualization App
 
 This application fetches data about countries using the [REST Countries API](https://restcountries.com/), stores it in a PostgreSQL database using Docker, and displays the data through a web dashboard built with Dash (Plotly).
 
-## 🧱 Features
+## Features
 
 - Fetches country data including name, population, region, capital, flag
 - Saves data to a PostgreSQL database using SQLAlchemy
@@ -11,7 +11,7 @@ This application fetches data about countries using the [REST Countries API](htt
 
 ---
 
-## 🚀 How to Run the App
+## How to Run the App
 
 ### 1. Clone the Repository
 

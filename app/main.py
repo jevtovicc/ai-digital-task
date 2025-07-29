@@ -44,7 +44,9 @@ def extract_essential_data(data: list[dict]) -> list[dict]:
              'country_official_name': entry['name']['official'],
              'flag_png': entry['flags']['png'],
              'flag_desc': entry['flags']['alt'], 
-             'population': entry['population']
+             'population': entry['population'],
+             'region': entry['region'],
+             'area': entry['area']
             } for entry in data]
 
 
@@ -80,7 +82,8 @@ if __name__ == '__main__':
 
     DATA_DIR = Path.cwd() / 'data'
     RAW_FILE = DATA_DIR / 'raw' / 'countries_raw.json'
-    URL = 'https://restcountries.com/v3.1/all?fields=name,flags,population'
+    fields_of_interest = ['name', 'flags', 'population', 'region', 'area']
+    URL = f'https://restcountries.com/v3.1/all?fields={",".join(fields_of_interest)}'
     DB_TABLE_NAME = 'countries'
 
     if RAW_FILE.exists():

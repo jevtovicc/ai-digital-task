@@ -18,7 +18,7 @@ engine = create_engine(DATABASE_URL)
 df = pd.read_sql("SELECT * FROM countries", engine)
 
 app.layout = html.Div([
-    html.H2("Countries"),
+    html.H2("Countries", style={'textAlign': 'center', 'marginBottom': '30px'}),
 
     html.Div([
         # Leva strana: tabela
@@ -31,28 +31,47 @@ app.layout = html.Div([
                 row_selectable="single",
                 selected_rows=[],
                 page_size=10,
-                style_table={'overflowX': 'auto', 'minWidth': '0px'},
+                style_table={'overflowX': 'auto'},
+                style_header={
+                    'backgroundColor': 'rgb(230, 230, 230)',
+                    'fontWeight': 'bold'
+                },
                 style_cell={
                     'textAlign': 'left',
-                    'minWidth': '100px',  
-                    'maxWidth': '200px',  
-                    'whiteSpace': 'nowrap',
+                    'padding': '8px',
+                    'minWidth': '120px',
+                    'maxWidth': '250px',
+                    'whiteSpace': 'normal',
                     'overflow': 'hidden',
                     'textOverflow': 'ellipsis',
                 },
                 style_cell_conditional=[
                     {
                         'if': {'column_id': 'flag_desc'},
-                        'maxWidth': '250px',    
-                        'whiteSpace': 'normal', 
+                        'maxWidth': '300px',
+                        'whiteSpace': 'normal',
                     }
                 ],
             )
-        ], style={'flex': '2', 'marginRight': '20px', 'minWidth': '0px'}),
+        ], style={
+            'flex': '2',
+            'padding': '20px',
+            'boxShadow': '0 0 10px rgba(0,0,0,0.1)',
+            'borderRadius': '10px',
+            'backgroundColor': '#f9f9f9'
+        }),
 
         # Desna strana: zastava
-        html.Div(id='flag-container', style={'flex': '1', 'textAlign': 'center'})
-    ], style={'display': 'flex'})
+        html.Div(id='flag-container', style={
+            'flex': '1',
+            'textAlign': 'center',
+            'padding': '20px',
+            'marginLeft': '20px',
+            'boxShadow': '0 0 10px rgba(0,0,0,0.1)',
+            'borderRadius': '10px',
+            'backgroundColor': '#f4f4f4'
+        }),
+    ], style={'display': 'flex', 'justifyContent': 'center', 'maxWidth': '1200px', 'margin': '0 auto'})
 ])
 
 # Callback za prikaz zastave
