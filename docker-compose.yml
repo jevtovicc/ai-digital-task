@@ -11,11 +11,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  app:
+  etl:
     build: .
-    container_name: python_app
-    depends_on:
-      - db
+    container_name: etl_app
     environment:
       DB_USER: filipjevtovic
       DB_PASSWORD: aidigitalpass123
@@ -25,6 +23,25 @@ services:
     volumes:
       - ./app:/app
     command: [ "python", "main.py" ]
+    depends_on:
+      - db
+
+  dash:
+    build: .
+    container_name: dash_app
+    ports:
+      - "8050:8050"
+    environment:
+      DB_USER: filipjevtovic
+      DB_PASSWORD: aidigitalpass123
+      DB_NAME: aidigitaldb
+      DB_HOST: db
+      DB_PORT: 5432
+    volumes:
+      - ./app:/app
+    command: [ "python", "visualization.py" ]
+    depends_on:
+      - db
 
 volumes:
   pgdata:
