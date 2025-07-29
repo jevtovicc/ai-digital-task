@@ -1,7 +1,6 @@
 import requests
 import pandas as pd
 import json
-import psycopg2
 from pathlib import Path
 import os
 import logging
@@ -22,12 +21,23 @@ def load_env_variables() -> dict[str, str]:
 
 def load_data(url: str) -> list[dict]:
    try:
-        response = requests.get(URL)
+        response = requests.get(url)
+        logging.info('Extracted data from an API')
         return response.json()
    except requests.RequestException as e:
        logging.error(f'Failed to fetch data: {e}')
        raise 
 
+
+def read_raw_data_from_json_file(filepath: Path) -> list[dict]:
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        logging.info(f'Loaded data from local file: {filepath}')
+        return data
+    except Exception as e:
+        logging.error(f'Error reading from JSON file: {e}')
+        raise
 
 def extract_essential_data(data: list[dict]) -> list[dict]:
     return [{'country_name': entry['name']['common'], 
@@ -69,13 +79,15 @@ if __name__ == '__main__':
     config = load_env_variables()
 
     DATA_DIR = Path.cwd() / 'data'
-    RAW_DIR = DATA_DIR / 'raw'
-
+    RAW_FILE = DATA_DIR / 'raw' / 'countries_raw.json'
+    URL = 'https://restcountries.com/v3.1/all?fields=name,flags,population'
     DB_TABLE_NAME = 'countries'
 
-    URL = 'https://restcountries.com/v3.1/all?fields=name,flags,population'
-    data = load_data(URL)    
-    write_raw_data_to_json_file(data, RAW_DIR / 'countries_raw.json')
+    if RAW_FILE.exists():
+        data = read_raw_data_from_json_file(RAW_FILE)
+    else:
+        data = load_data(URL)
+        write_raw_data_to_json_file(data, RAW_FILE)
 
     transformed_data = extract_essential_data(data)
     countries_df = convert_to_dataframe(transformed_data)
