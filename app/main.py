@@ -90,6 +90,7 @@ if __name__ == '__main__':
         data = read_raw_data_from_json_file(RAW_FILE)
     else:
         data = load_data(URL)
+        RAW_FILE.parent.mkdir(parents=True, exist_ok=True)
         write_raw_data_to_json_file(data, RAW_FILE)
 
     transformed_data = extract_essential_data(data)
